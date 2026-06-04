@@ -1,0 +1,168 @@
+body {
+    height: 100vh;
+    background: #093f33 ;
+}
+
+h1 {
+    margin: 2rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: goldenrod;
+    font-family: arial;
+}
+
+h2 {
+    font-family: arial;
+    font-size: 26px;
+    color: skyblue;
+}
+
+.game-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    perspective: 1000px;
+}
+
+#game-area{
+    z-index: 1;
+    width: 85%;
+    transform: rotateX(35deg);
+    padding: 0 2rem 2rem 2rem;
+    background-image: url(table.png);
+	border:5px solid green;
+}
+
+#dealer-area {
+    margin-bottom: 2rem;
+}
+
+#dealer-cards {
+    transform: translateY(-40px);
+    display: flex;
+    justify-content: center;
+    height: 168px;
+}
+
+#player-area #announcement {
+    margin-left: 25%;
+}
+
+#player-cards {
+    display: flex;
+    justify-content: center;
+    height: 168px;
+}
+
+#action-area {
+    z-index: 10;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+}
+
+#next-hand, #hit-me {
+    margin-bottom: 3rem;
+}
+
+button {
+    background: goldenrod;
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    outline: none;
+	color:#fff;
+}
+
+button:hover{
+	cursor:pointer;
+}
+
+img {
+    width: 130px;
+    height: 190px;
+}
+
+@media (min-width: 1200px) {
+    body {
+        padding: 0 12%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* body{
+    background: url(table.png);
+    background-size: cover;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 3em;
+    text-align: center;
+    padding-top: 2.5rem;
+    color: white;
+    font-weight: bold;
+}
+
+h1 {
+    color: goldenrod
+}
+
+
+#message-el {
+    font-style: italic;
+
+}
+
+.button-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+button {
+    background-color: goldenrod;
+    color: #016f32;
+    font-weight: bold;
+    font-size: 18px;
+    width: 150px;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 2px;
+} */
