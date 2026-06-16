@@ -4,7 +4,9 @@ const jokerValues = ['B', 'R']
 let deck = []
 let playerCards = []
 let dealerCards = []
-announcementNode.textContent = "";
+let playerScore = 0
+let dealerScore = 0
+const announcement = document.getElementById("announcement")
 let isLost = false
 let isWon = false
 let isTie = false
@@ -49,7 +51,8 @@ function shuffleCards(deck){
         deck[location1] = deck[location2]
         deck[location2] = temp
 
-    }
+    } document.getElementById("new-game").style.display = "none"
+     document.getElementById("next-hand").style.display = "none"
 }
 
  function displayCard(card,containerSelector){
@@ -65,10 +68,17 @@ function shuffleCards(deck){
         } else if (containerSelector === '#dealer-cards'){
             dealerCards.push(card)
         }
+        
 }
 
+function endGame(){
+    document.getElementById("hit-me").style.display = "none"
+    document.getElementById("stay").style.display = "none"
+    document.getElementById("next-hand").style.display = "inline"
+}
 
 document.getElementById('new-game').addEventListener('click', () => {
+    resetPlayingArea()
     deck = getDeck()
     clearCards()
     shuffleCards(deck)
@@ -92,8 +102,8 @@ function dealInitialHands(){
     displayCard(deck.pop(), '#dealer-cards')
 
     // calculating and display scores
-    const dealerScore = countScore(dealerCards)
-    const playerScore = countScore(playerCards)
+    dealerScore = countScore(dealerCards)
+    playerScore = countScore(playerCards)
 
     document.getElementById("dealer-number").textContent = dealerScore
     document.getElementById("player-number").textContent = playerScore
@@ -102,6 +112,27 @@ function dealInitialHands(){
     // show action button
     document.getElementById('hit-me').style.display = 'inline'
     document.getElementById('stay').style.display= 'inline'
+
+    // checking win/lost condition
+    if (playerScore === "Bust"){
+        isLost =true
+        announcement.textContent = "Sorry, You Lost the Game..."
+        endGame()
+    }   else if (playerScore === 21){
+        isWon =true
+        announcement.textContent = "Blackjack! You've Won the Game!"
+        endGame()
+    }   
+       else if (dealerScore === "Bust"){
+        isWon =true
+        announcement.textContent = "Dealer busts! You Won the Game!"
+        endGame()
+    }   
+       else if (dealerScore === 21){
+        isLost =true
+        announcement.textContent = "Dealer got Blackjack! You Lost..."
+        endGame()
+    }   
 
 }
 
@@ -120,7 +151,7 @@ function countScore (card){
     let score = card.reduce((total, card) =>{
         if (card.value === "1"){
             hasAce = true
-            return total = 1
+            return total += 1
         }
         if (['11','12','13'].includes(card.value)) {return total +10}
         return total + Number(card.value)
@@ -128,8 +159,23 @@ function countScore (card){
     if (hasAce) {
         score = (score + 10) > 21 ? score : score +10
     }
+    // return bust if score exceeds 21
+    if (score > 21) return "Bust"
+
 return score
 }
+
+
+document.getElementById("hit-me").addEventListener('click', () => {
+    hitMe("player")
+})
+document.getElementById("stay").addEventListener("click", () => {
+    hitMe("dealer")
+} )
+
+document.getElementById("next-hand").addEventListener("click", () => {
+    document.getElementById("new-game").click()
+} )
 
 
 function hitMe(target){
@@ -137,12 +183,18 @@ function hitMe(target){
     // for the player
     if (target === "player") {
         displayCard(deck.pop(), '#player-cards')
-        playerScore = countScore(playerScore)
+        playerScore = countScore(playerCards)
         document.getElementById("player-number").textContent = playerScore
 
         if (playerScore > 21 || playerScore === "Bust"){
         isLost = true
-        announcementNode.textContent = "You're out of the game!"
+        announcement.textContent = "You're out of the game!"
+        endGame()
+        }
+         else if (playerScore === 21){
+        isWon = true
+        announcement.textContent = "Blackjack! You've Won the Game!"
+        endGame()
         }
     }
 
@@ -158,115 +210,45 @@ function dealerPlays (){
     // count the dealer's score with countScore() and update the UI to reflect the change
 
     if (isLost || isTie || isWon) {return}
-    dealerScore = countScore(dealerScore)
+    dealerScore = countScore(dealerCards)
     document.getElementById("dealer-number").textContent = dealerScore
+
+
+    if (dealerScore < 17) {
+        setTimeout(() => hitMe("dealer")
+        , 900)
+    }
+        else if (dealerScore === "Bust" || dealerScore > 21 ) {
+        isWon = true
+        announcement.textContent = "Congratulations! You've Won The Game!"
+        endGame()
+        
+    } else if (dealerScore > playerScore){
+        isLost = true
+        announcement.textContent = "Sorry, You Lost the Game..."
+        endGame()
+        
+    } else if (dealerScore === playerScore){
+        isTie = true
+        announcement.textContent = "It's a tie!"
+        endGame()
+    }
+    else {isWon = true
+        announcement.textContent = "Congratulations! You've Won The Game!"
+        endGame()
+    }
+    
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let cards = []
-// let sum = 0 
-// let hasBlackJack = false
-// let isAlive = false
-// let message =""
-// let player = {
-//     name: "Faust",
-//     chips: 67 
-// }
-
-
-// console.log(sum)
-// let messageEl = document.getElementById("message-el")
-// // let sumEl = document.getElementById("sum-el")
-// let sumEl = document.querySelector("#sum-el")
-// //query selector sistem milih2nya kaya di css
-// let cardsEl = document.getElementById("cards-el")
-// let playerEl = document.getElementById("player-el")
-// playerEl.textContent= player.name + ": $" + player.chips
-// let fileName = `${drawnCard.suit}-${drawnCard.value}.png`
-
-// console.log(playerEl)
-
-// function getRandomCard() {
-//     let randomCard = Math.floor(Math.random()*13 ) +1
-//     // if (randomCard === 1){
-//     //     return 11
-//     // }  
-//         if (randomCard > 10){
-//         return 10
-//     } else return randomCard
-       
-// }
-
-// function startGame(){
-//     isAlive = true
-//     let firstcard= getRandomCard()
-//     let secondcard= getRandomCard()
-//     cards = [firstcard, secondcard]
-//     sum = firstcard + secondcard
-
-
-//     renderGame()
-// }
-
-// function renderGame(){
-// cardsEl.textContent= "Cards: "
-
-//     for (let i=0; i<cards.length;i++){
-//         cardsEl.textContent += cards[i] + " "
-//     }
-      
-// if (sum <= 20) {
-//     message ="Do you want to draw a new card? 😏"
-// }
-// else if (sum === 21){
-//     message="Woohoo! You've got a Blackjack! 🥳"
-//     hasBlackJack = true
-
-// }
-// else {
-//     message="You're out of the game! 😭" 
-//     isAlive =false
-    
-// }
-
-
-// sumEl.textContent= "Sum: " + sum
-// messageEl.textContent=message
- 
-// }
-
-// function newCard(){
-//     if (isAlive === true && hasBlackJack === false){
-//     console.log("Drawing a new card from the deck");
-//     let newcard = getRandomCard()
-//     sum += newcard
-//     cards.push(newcard)
-//     console.log(cards);
-//     renderGame()
-//     }
-// }
-
+function resetPlayingArea(){
+    playerCards = []
+    dealerCards = []
+    playerScore = 0
+    dealerScore = 0
+    announcement.textContent = ""
+    isLost = false
+    isWon = false
+    isTie = false
+}
 
 
